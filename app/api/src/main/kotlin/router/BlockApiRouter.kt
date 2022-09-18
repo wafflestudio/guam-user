@@ -21,9 +21,11 @@ class BlockApiRouter(
 ) {
 
     suspend fun gets(request: ServerRequest): ServerResponse {
-        val uc = UserContext.getOrNull() ?: throw UnAuthorized()
+        val userId = UserContext.getOrNull()?.id
+            ?: request.headers().firstHeader("X-GATEWAY-USER-ID")?.toLong() // FIXME: letter 합z
+            ?: throw UnAuthorized()
 
-        val response = blockQueryService.getBlockList(uc.id)
+        val response = blockQueryService.getBlockList(userId)
 
         return ServerResponse.ok().bodyValueAndAwait(response)
     }

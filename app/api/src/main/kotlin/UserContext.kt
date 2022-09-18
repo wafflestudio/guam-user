@@ -25,14 +25,14 @@ class UserContextResolver(
 ) : RequestContextResolver {
 
     override suspend fun resolveContext(serverRequest: ServerRequest): RequestContext {
-        val authToken = kotlin.runCatching {
-            serverRequest.headers().firstHeader("Authorization")!!
+        val authInfo = runCatching {
+            val authToken = serverRequest.headers().firstHeader("Authorization")!!
                 .split(" ")[1]
+
+            authQueryService.getAuthInfo(authToken)
         }.getOrElse {
             return EmptyCoroutineContext
         }
-
-        val authInfo = authQueryService.getAuthInfo(authToken)
 
         return if (authInfo.user != null) {
             UserContext(id = authInfo.user!!.userId)
