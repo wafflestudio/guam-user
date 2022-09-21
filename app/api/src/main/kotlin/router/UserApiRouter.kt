@@ -78,7 +78,8 @@ class UserApiRouter(
                 introduction = req.introduction,
                 githubId = req.githubId,
                 blogUrl = req.blogUrl,
-                profileImage = req.profileImage
+                updateImage = req.updateImage,
+                imagePath = req.imagePath
             )
         )
 

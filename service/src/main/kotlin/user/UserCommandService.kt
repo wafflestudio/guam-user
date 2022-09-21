@@ -1,5 +1,7 @@
 package waffle.guam.user.service.user
 
+import org.springframework.core.env.Environment
+import org.springframework.core.env.Profiles
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import waffle.guam.user.domain.DuplicateInterest
@@ -7,6 +9,7 @@ import waffle.guam.user.domain.InterestNotFound
 import waffle.guam.user.domain.UserInfo
 import waffle.guam.user.domain.UserNotFound
 import waffle.guam.user.infra.db.UserRepository
+import waffle.guam.user.infra.external.S3PresignClient
 import waffle.guam.user.service.user.UserCommandService.CreateInterest
 import waffle.guam.user.service.user.UserCommandService.DeleteInterest
 import waffle.guam.user.service.user.UserCommandService.UpdateUser
@@ -22,7 +25,8 @@ interface UserCommandService {
         val introduction: String?,
         val githubId: String?,
         val blogUrl: String?,
-        val profileImage: Boolean?,
+        val updateImage: Boolean,
+        val imagePath: String?,
     )
 
     data class CreateInterest(
@@ -40,32 +44,41 @@ interface UserCommandService {
 @Service
 class UserCommandServiceImpl(
     private val userRepository: UserRepository,
+    private val s3PresignClient: S3PresignClient,
+    env: Environment,
 ) : UserCommandService {
+    private val imagePrefix = when {
+        env.acceptsProfiles(Profiles.of("dev")) -> "DEV"
+        env.acceptsProfiles(Profiles.of("prod")) -> "PROD"
+        else -> "LOCAL"
+    }
 
     override suspend fun updateUser(command: UpdateUser): UserInfo {
         val user = userRepository.findById(command.userId) ?: throw UserNotFound()
+        val (profileImage, presigendUrl) = when (command.updateImage) {
+            true -> {
+                if (command.imagePath != null) {
+                    val path = "$imagePrefix/USER/${command.userId}/${command.imagePath}"
+                    path to s3PresignClient.getPresigendUrl(path)
+                } else {
+                    null to null
+                }
+            }
+
+            false -> {
+                user.profileImage to null
+            }
+        }
 
         val updatedUser = user.copy(
             nickname = command.nickname ?: user.nickname,
             introduction = command.introduction ?: user.introduction,
             githubId = command.githubId ?: user.githubId,
             blogUrl = command.blogUrl ?: user.blogUrl,
-            profileImage = when (command.profileImage) {
-                true -> {
-                    TODO()
-                }
-
-                false -> {
-                    null
-                }
-
-                else -> {
-                    user.profileImage
-                }
-            }
+            profileImage = profileImage
         )
 
-        return userRepository.save(updatedUser).let(::UserInfo)
+        return userRepository.save(updatedUser).let(::UserInfo).copy(presignedUrl = presigendUrl)
     }
 
     override suspend fun createInterest(command: CreateInterest): UserInfo {

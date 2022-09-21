@@ -9,18 +9,13 @@ spring:
     url: # in vault
     username: # in vault
     password: # in vault
-cloud:
+user:
   aws:
-    credentials:
+    s3:
       accessKey: "" # vault
       secretKey: "" # vault
-      instanceProfile: false
-    s3:
-      bucket: guam
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
+      bucket: "" # vault
+      region: "" # vault
 ---
 spring.config.activate.on-profile: dev
 
