@@ -50,7 +50,6 @@ class GuamUserApplication(
         GET("/api/v1/users", user::gets)
         GET("/api/v1/users/{userId}", user::get)
         GET("/api/v1/blocks", block::gets)
-//        GET("/api/v1/auth", auth::getAuth)
     }
 }
 

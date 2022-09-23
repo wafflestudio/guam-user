@@ -6,8 +6,6 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import waffle.guam.user.api.UserContext
-import waffle.guam.user.api.request.CreateBlockRequest
-import waffle.guam.user.api.request.DeleteBlockRequest
 import waffle.guam.user.domain.UnAuthorized
 import waffle.guam.user.service.block.BlockCommandService
 import waffle.guam.user.service.block.BlockCommandService.CreateBlock
@@ -52,3 +50,11 @@ class BlockApiRouter(
         return ServerResponse.ok().bodyValueAndAwait(Unit)
     }
 }
+
+data class CreateBlockRequest(
+    val blockUserId: Long,
+)
+
+data class DeleteBlockRequest(
+    val blockUserId: Long,
+)

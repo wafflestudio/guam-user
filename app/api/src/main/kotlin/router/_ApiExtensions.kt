@@ -8,7 +8,3 @@ fun ServerRequest.getParam(param: String): String = queryParamOrNull(param) ?: t
 fun ServerRequest.getParamInt(param: String): Int = getParam(param).toIntOrNull() ?: throw BadRequest()
 
 fun ServerRequest.getPathLong(pathVar: String) = pathVariable(pathVar).toLongOrNull() ?: throw BadRequest()
-
-fun ServerRequest.getBearerToken(): String = runCatching {
-    headers().firstHeader("Authorization")!!.split(" ")[1]
-}.getOrElse { throw UnAuthorized() }

@@ -7,8 +7,6 @@ import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.queryParamOrNull
 import waffle.guam.user.api.UserContext
-import waffle.guam.user.api.request.CreateInterestRequest
-import waffle.guam.user.api.request.UpdateUserRequest
 import waffle.guam.user.domain.UserNotFound
 import waffle.guam.user.service.auth.AuthCommandService
 import waffle.guam.user.service.auth.AuthCommandService.CreateUser
@@ -18,6 +16,7 @@ import waffle.guam.user.service.user.UserCommandService.CreateInterest
 import waffle.guam.user.service.user.UserCommandService.DeleteInterest
 import waffle.guam.user.service.user.UserCommandService.UpdateUser
 import waffle.guam.user.service.user.UserQueryService
+import javax.validation.constraints.Min
 
 @Service
 class UserApiRouter(
@@ -124,3 +123,17 @@ class UserApiRouter(
         return ServerResponse.ok().bodyValueAndAwait(updatedUser)
     }
 }
+
+data class UpdateUserRequest(
+    @Min(value = 2, message = "Nickname should be greater than 1.")
+    val nickname: String? = null,
+    val introduction: String? = null,
+    val githubId: String? = null,
+    val blogUrl: String? = null,
+    val updateImage: Boolean,
+    val imagePath: String? = null,
+)
+
+data class CreateInterestRequest(
+    val name: String,
+)

@@ -6,8 +6,6 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import waffle.guam.user.api.UserContext
-import waffle.guam.user.api.request.ReadNotification
-import waffle.guam.user.api.request.ReadNotificationRequest
 import waffle.guam.user.domain.UnAuthorized
 import waffle.guam.user.service.notification.NotificationCommandService
 import waffle.guam.user.service.notification.NotificationQueryService
@@ -40,8 +38,18 @@ class NotificationApiRouter(
             throw UnAuthorized()
         }
 
-        commandService.read(command = ReadNotification(req))
+        commandService.read(
+            NotificationCommandService.ReadNotification(
+                userId = req.userId,
+                notificationIds = req.pushEventIds
+            )
+        )
 
         return ServerResponse.ok().bodyValueAndAwait(Unit)
     }
 }
+
+data class ReadNotificationRequest(
+    val userId: Long,
+    val pushEventIds: List<Long>,
+)
