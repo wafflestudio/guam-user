@@ -13,7 +13,6 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
 import java.time.Duration
 
-
 interface S3PresignClient {
     suspend fun getPresigendUrl(path: String): String
 }
@@ -37,7 +36,6 @@ class S3PresignClientImpl(
             .signatureDuration(Duration.ofMinutes(10))
             .putObjectRequest(request)
             .build()
-
 
         val presignedPutObjectRequest = presigner.presignPutObject(putObjectPresignRequest)
 

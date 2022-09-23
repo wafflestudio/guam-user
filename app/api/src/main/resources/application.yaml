@@ -3,6 +3,45 @@ spring:
     active: dev
   config:
     import: application-service.yaml
+  cloud:
+    gateway:
+      httpclient:
+        response-timeout: 5s
+      enabled: true
+      routes:
+        # favorite
+        - id: favorite_auth_route
+          uri: http://guam-favorite.jon-snow-korea.com
+          predicates:
+            - Path=/community/api/v1/{parent:\w+}/{id:\d+}/{type:(?:likes|scraps)}, /community/api/v1/posts/{postId:\d+}/{parent:\w+}/{id:\d+}/{type:(?:likes)}
+            - Method=POST,DELETE
+          filters:
+            - SetPath=/api/v1/{type}/{parent}/{id}
+            - Guam
+        # letter TODO: 유저로 통합
+        - id: letter_auth_route
+          uri: http://guam-letter.jon-snow-korea.com
+          predicates:
+            - Path=/community/api/v1/letters/**
+          filters:
+            - RewritePath=/community(?<segment>/?.*), $\{segment}
+            - Guam
+        # community
+        - id: community_route
+          uri: http://guam-community.jon-snow-korea.com
+          predicates:
+            - Path=/community/api/v1/posts
+            - Method=GET
+          filters:
+            - RewritePath=/community(?<segment>/?.*), $\{segment}
+            - GuamAnonymous
+        - id: community_auth_route
+          uri: http://guam-community.jon-snow-korea.com
+          predicates:
+            - Path=/community/**
+          filters:
+            - RewritePath=/community(?<segment>/?.*), $\{segment}
+            - Guam
 ---
 spring:
   servlet:

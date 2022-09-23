@@ -27,26 +27,30 @@ class GuamUserApplication(
 
     @Bean
     fun router() = simpleCoRouter {
-
-        GET("/api/v1/auth", auth::getAuth)
         GET("/api/v1/user/token", auth::initFirebaseToken)
 
         // block
-        GET("/api/v1/blocks", block::gets)
-        POST("/api/v1/blocks", block::create)
-        DELETE("/api/v1/blocks", block::delete)
+        GET("/community/api/v1/blocks", block::gets)
+        POST("/community/api/v1/blocks", block::create)
+        DELETE("/community/api/v1/blocks", block::delete)
 
         // push
-        GET("/api/v1/push", notification::gets)
-        POST("/api/v1/push/read", notification::read)
+        GET("/community/api/v1/push", notification::gets)
+        POST("/community/api/v1/push/read", notification::read)
 
         // user
-        GET("/api/v1/users/me", user::getMe)
+        GET("/community/api/v1/users/me", user::getMe)
+        GET("/community/api/v1/users", user::gets)
+        GET("/community/api/v1/users/{userId}", user::get)
+        PATCH("/community/api/v1/users/{targetUserId}", user::update)
+        POST("/community/api/v1/users/{targetUserId}/interest", user::addInterest)
+        DELETE("/community/api/v1/users/{targetUserId}/interest", user::deleteInterest)
+
+        // fixme: /community를 prefix로 안찌르는 서버가 있다. (letter, community)
         GET("/api/v1/users", user::gets)
         GET("/api/v1/users/{userId}", user::get)
-        PATCH("/api/v1/users/{targetUserId}", user::update)
-        POST("/api/v1/users/{targetUserId}/interest", user::addInterest)
-        DELETE("/api/v1/users/{targetUserId}/interest", user::deleteInterest)
+        GET("/api/v1/blocks", block::gets)
+//        GET("/api/v1/auth", auth::getAuth)
     }
 }
 
