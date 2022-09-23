@@ -16,15 +16,9 @@ class GuamUserClientImpl(
     private val logger = LoggerFactory.getLogger(javaClass)
     private val client = builder.baseUrl(url).build()
 
-    override suspend fun getAuth(firebaseToken: String): AuthInfo =
-        client.get()
-            .uri("/api/v1/auth?token={token}", firebaseToken)
-            .retrieve()
-            .awaitBody()
-
     override suspend fun getUser(userId: Long): UserInfo = runCatching {
         client.get()
-            .uri("/api/v1/users?userIds={userId}", userId)
+            .uri("community/api/v1/users?userIds={userId}", userId)
             .retrieve()
             .awaitBody<List<UserInfo>>()
             .first()
@@ -40,7 +34,7 @@ class GuamUserClientImpl(
 
     override suspend fun getUsers(userIds: List<Long>): Map<Long, UserInfo> = runCatching {
         client.get()
-            .uri("/api/v1/users?userIds={userIds}", userIds.joinToString(","))
+            .uri("community/api/v1/users?userIds={userIds}", userIds.joinToString(","))
             .retrieve()
             .awaitBody<List<UserInfo>>()
             .let { users ->

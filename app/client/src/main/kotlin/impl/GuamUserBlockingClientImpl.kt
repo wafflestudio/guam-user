@@ -14,10 +14,6 @@ class GuamUserBlockingClientImpl(
 
     private val client = GuamUserClientImpl(url, builder, fallback)
 
-    override fun getAuth(firebaseToken: String): AuthInfo = runBlocking {
-        client.getAuth(firebaseToken)
-    }
-
     override fun getUser(userId: Long): UserInfo = runBlocking {
         client.getUser(userId)
     }
