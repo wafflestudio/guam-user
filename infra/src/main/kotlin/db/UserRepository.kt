@@ -34,7 +34,7 @@ internal class UserRepositoryImpl(
 }
 
 @Table("users")
-internal class UserTable(
+internal data class UserTable(
     @Id
     val id: Long = 0L,
     val email: String?,
@@ -65,7 +65,6 @@ internal fun UserEntity(e: UserTable) = User(
 )
 
 internal fun UserTable(d: User) = UserTable(
-    id = d.id,
     email = d.email,
     nickname = d.nickname,
     introduction = d.introduction,

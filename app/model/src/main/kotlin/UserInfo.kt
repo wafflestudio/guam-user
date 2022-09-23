@@ -1,5 +1,6 @@
 package waffle.guam.user.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 
 data class UserInfo(
@@ -15,6 +16,9 @@ data class UserInfo(
     val presignedUrl: String? = null, // for update
 ) {
     val isProfileSet: Boolean get() = nickname.isNotBlank()
+
+    @get:JsonIgnore
+    val isAnonymous: Boolean get() = id == 0L
 
     data class InterestInfo(
         val name: String,

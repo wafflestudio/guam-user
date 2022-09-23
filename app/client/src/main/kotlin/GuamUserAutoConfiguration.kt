@@ -18,7 +18,7 @@ class GuamUserAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnMissingBean(GuamUserClient.Blocking::class)
     @Bean
-    fun blockingClient(
+    fun guamUserBlockingClient(
         properties: GuamUserProperties,
         builder: WebClient.Builder,
         env: Environment,
@@ -33,7 +33,7 @@ class GuamUserAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     @ConditionalOnMissingBean(GuamUserClient::class)
     @Bean
-    fun client(
+    fun guamUserClient(
         properties: GuamUserProperties,
         builder: WebClient.Builder,
         env: Environment,
@@ -46,7 +46,7 @@ class GuamUserAutoConfiguration {
     }
 
     fun url(env: Environment) = when {
-        env.acceptsProfiles(Profiles.of("dev")) -> "http://guam-user.jon-snow-korea.com"
+        env.acceptsProfiles(Profiles.of("dev")) -> "http://guam.jon-snow-korea.com"
         else -> TODO()
     }
 }
