@@ -1,6 +1,5 @@
 package waffle.guam.user.client
 
-import waffle.guam.user.domain.AuthInfo
 import waffle.guam.user.domain.UserInfo
 
 interface GuamUserClient {

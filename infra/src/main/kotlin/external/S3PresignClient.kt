@@ -28,7 +28,6 @@ class S3PresignClientImpl(
         val request: PutObjectRequest = PutObjectRequest.builder()
             .bucket(s3Properties.bucket)
             .key(path)
-            .acl("public-read")
             .build()
 
         val putObjectPresignRequest: PutObjectPresignRequest = PutObjectPresignRequest
@@ -37,9 +36,8 @@ class S3PresignClientImpl(
             .putObjectRequest(request)
             .build()
 
-        val presignedPutObjectRequest = presigner.presignPutObject(putObjectPresignRequest)
-
-        return presignedPutObjectRequest.url().toExternalForm()
+        val presignedResponse = presigner.presignPutObject(putObjectPresignRequest)
+        return presignedResponse.url().toExternalForm()
     }
 
     private fun buildClient(): S3Presigner =

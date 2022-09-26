@@ -3,7 +3,6 @@ package waffle.guam.user.client.impl
 import kotlinx.coroutines.runBlocking
 import org.springframework.web.reactive.function.client.WebClient
 import waffle.guam.user.client.GuamUserClient
-import waffle.guam.user.domain.AuthInfo
 import waffle.guam.user.domain.UserInfo
 
 class GuamUserBlockingClientImpl(
