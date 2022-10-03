@@ -65,6 +65,7 @@ internal fun UserEntity(e: UserTable) = User(
 )
 
 internal fun UserTable(d: User) = UserTable(
+    id = d.id,
     email = d.email,
     nickname = d.nickname,
     introduction = d.introduction,
