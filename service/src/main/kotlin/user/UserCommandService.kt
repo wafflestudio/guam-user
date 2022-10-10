@@ -13,9 +13,11 @@ import waffle.guam.user.infra.external.S3PresignClient
 import waffle.guam.user.service.user.UserCommandService.CreateInterest
 import waffle.guam.user.service.user.UserCommandService.DeleteInterest
 import waffle.guam.user.service.user.UserCommandService.UpdateUser
+import waffle.guam.user.service.user.UserCommandService.DeleteUser
 
 interface UserCommandService {
     suspend fun updateUser(command: UpdateUser): UserInfo
+    suspend fun deleteUser(command: DeleteUser)
     suspend fun createInterest(command: CreateInterest): UserInfo
     suspend fun deleteInterest(command: DeleteInterest): UserInfo
 
@@ -27,6 +29,10 @@ interface UserCommandService {
         val blogUrl: String?,
         val updateImage: Boolean,
         val imagePath: String?,
+    )
+
+    data class DeleteUser(
+        val userId: Long,
     )
 
     data class CreateInterest(
@@ -79,6 +85,10 @@ class UserCommandServiceImpl(
         )
 
         return userRepository.save(updatedUser).let(::UserInfo).copy(presignedUrl = presigendUrl)
+    }
+
+    override suspend fun deleteUser(command: DeleteUser) {
+        userRepository.deleteById(command.userId)
     }
 
     override suspend fun createInterest(command: CreateInterest): UserInfo {
