@@ -34,8 +34,9 @@ internal class UserRepositoryImpl(
     override suspend fun save(e: User): User =
         userDao.save(UserTable(e)).let(::UserEntity)
 
-    override suspend fun deleteById(userId: Long): Unit =
+    override suspend fun deleteById(userId: Long) {
         userDao.deleteById(userId)
+    }
 }
 
 @Table("users")
