@@ -13,6 +13,8 @@ interface UserRepository {
     suspend fun findAllByIds(ids: List<Long>): List<User>
     suspend fun findByFirebaseId(firebaseId: String): User?
     suspend fun save(e: User): User
+
+    suspend fun deleteById(userId: Long)
 }
 
 @Service
@@ -31,6 +33,10 @@ internal class UserRepositoryImpl(
 
     override suspend fun save(e: User): User =
         userDao.save(UserTable(e)).let(::UserEntity)
+
+    override suspend fun deleteById(userId: Long) {
+        userDao.deleteById(userId)
+    }
 }
 
 @Table("users")

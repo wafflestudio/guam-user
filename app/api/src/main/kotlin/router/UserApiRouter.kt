@@ -15,6 +15,7 @@ import waffle.guam.user.service.user.UserCommandService
 import waffle.guam.user.service.user.UserCommandService.CreateInterest
 import waffle.guam.user.service.user.UserCommandService.DeleteInterest
 import waffle.guam.user.service.user.UserCommandService.UpdateUser
+import waffle.guam.user.service.user.UserCommandService.DeleteUser
 import waffle.guam.user.service.user.UserQueryService
 import javax.validation.constraints.Min
 
@@ -83,6 +84,23 @@ class UserApiRouter(
         )
 
         return ServerResponse.ok().bodyValueAndAwait(updatedUser)
+    }
+
+    suspend fun delete(request: ServerRequest): ServerResponse {
+        val uc = UserContext.getOrNull() ?: throw UnAuthorized()
+        val targetUserId = request.getPathLong("targetUserId")
+
+        if (uc.id != targetUserId) {
+            throw UnAuthorized()
+        }
+
+        val deletedUser = userCommandService.deleteUser(
+            DeleteUser(
+                userId = targetUserId,
+            )
+        )
+
+        return ServerResponse.ok().bodyValueAndAwait(deletedUser)
     }
 
     suspend fun addInterest(request: ServerRequest): ServerResponse {

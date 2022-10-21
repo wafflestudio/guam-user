@@ -42,6 +42,7 @@ class GuamUserApplication(
         GET("/community/api/v1/users/me", user::getMe)
         GET("/community/api/v1/users", user::gets)
         GET("/community/api/v1/users/{userId}", user::get)
+        DELETE("/community/api/v1/users/{targetUserId}", user::delete)
         PATCH("/community/api/v1/users/{targetUserId}", user::update)
         POST("/community/api/v1/users/{targetUserId}/interest", user::addInterest)
         DELETE("/community/api/v1/users/{targetUserId}/interest", user::deleteInterest)
