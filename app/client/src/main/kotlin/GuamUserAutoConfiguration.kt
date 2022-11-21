@@ -46,7 +46,7 @@ class GuamUserAutoConfiguration {
     }
 
     fun url(env: Environment) = when {
-        env.acceptsProfiles(Profiles.of("dev")) -> "http://guam.jon-snow-korea.com"
+        env.acceptsProfiles(Profiles.of("dev")) -> "http://guam-api.wafflestudio.com"
         else -> TODO()
     }
 }
